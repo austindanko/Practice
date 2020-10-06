@@ -27,4 +27,3 @@ save_person.write_to_file("file_name.str")
 
 #pynmrstar.utils.iter_entries()
 
-#Fix capitalization, Send to File, Start new assignment
