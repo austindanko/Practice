@@ -1,7 +1,4 @@
 import pynmrstar
-entry15000 = pynmrstar.Entry.from_database(15000)
-#Overall entry structure, remove # below
-#entry15000.print_tree()
 
 #Creating inital saveframe.
 #Saveframe (Name, Value)
