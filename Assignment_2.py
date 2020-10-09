@@ -1,10 +1,19 @@
-import pynmrstar
+#Create a loop for _Experiment.Names, and save each one to a SET
 
-entry15000 = pynmrstar.Entry.from_database(15000)
+import pynmrstar
 
 all_entries = pynmrstar.utils.iter_entries()
 
+experiments = set()
 
 for entry in all_entries:
     value = entry.get_tag('_Experiment.Name')
-    print(value)
+    experiments.update(value)
+
+for title in experiments:
+    print(title)
+
+
+
+
+
