@@ -1,2 +1,3 @@
-pynmrstar==3.0.6
+pynmrstar==3.0.8
+
 
