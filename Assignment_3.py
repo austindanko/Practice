@@ -5,27 +5,17 @@ exp_dict = {x:lst.count(x)
             for x in lst[:5]}
 #print(exp_dict)
 
-exp_set = set()
-for x in lst:
-    exp_set.update(lst)
-#print(exp_set)
 
-exp_dict_3 = {x:exp_set.count(x)
-              for x in exp_set}
-print(exp_dict_3)
+import pynmrstar
 
-#import pynmrstar
+all_entries = pynmrstar.utils.iter_entries()
 
-#all_entries = pynmrstar.utils.iter_entries()
+for entry in all_entries:
+    value = entry.get_tag('_Experiment.Name')
+    exp_dict_2 = {x: value.count(x)
+                  for x in value[:10]}
+    print(exp_dict_2)
 
-#experiments = set()
 
-#for entry in all_entries:
-#    value = entry.get_tag('_Experiment.Name')
-#    experiments.update(value)
-
-#exp_dict_2 = {x:experiments.count(x)
-#              for x in experiments[:10]}
-#print(exp_dict_2)
 
 
