@@ -1,20 +1,34 @@
+from typing import Set
 
-lst1 = ["a", "b", "c", "d", "e"]
-lst2 = ["d", "e", "f", "f", "f", "g", "h", "h"]
-lst3 = []
+import requests
+import pynmrstar
 
-for x in lst2:
-    if x not in lst1:
-        lst3.append(x)
-#print(lst3)
+import time
+time.sleep(.02)
 
-l_dict = {i:lst3.count(i)
-          for i in lst3}
-#print(l_dict)
 
-srt_dict = sorted(l_dict.items(), key=lambda x:
+known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
+lst_k_g_v = list(known_good_values)
+
+all_entries = pynmrstar.utils.iter_entries()
+experiments = set()
+for entry in all_entries:
+    value = entry.get_tag('_Experiment.Name')
+    experiments.update(value)
+lst_experiments = list(experiments)
+
+odd_balls = []
+
+for x in lst_experiments:
+    if x not in lst_k_g_v:
+        odd_balls.append(x)
+
+exp_dict = {x:odd_balls.count(x)
+          for x in odd_balls[:10]}
+srt_dict = sorted(exp_dict.items(), key=lambda x:
                   x[1], reverse=True)
-for y in srt_dict:
-    print(y[0], y[1])
+for x in srt_dict:
+    print(x[0], x[1])
+
 
 
