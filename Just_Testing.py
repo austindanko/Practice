@@ -19,6 +19,15 @@ for x, y in zip(lst1, lst2):
         print("No Match")
 
 
+    with open('api.bmrb.csv', 'w') as f:
+        w = csv.writer(f)
+        w.writerows($$$$$.items())
+
+with open('api_bmrb.csv') as f:
+    r = csv.reader(f)
+    $$$$$ = {row[0]: row[1] for row in r}
+
+
 
 
 
