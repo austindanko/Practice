@@ -21,15 +21,16 @@ if not os.path.exists('api.bmrb.csv'):
     lst_experiments: List[str] = list(experiments)
 
     with open('api.bmrb.csv', 'w') as file:
-        write = csv.writer(file)
-        write.writerows(lst_experiments)
-
-with open('api.bmrb.csv') as file:
-    experiments_csv = csv.reader(file)
+        csv_writer = csv.writer(file)
+        csv_writer.writerow(lst_experiments)
+else:
+    with open('api.bmrb.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+        lst_experiments = next(csv_reader)
 
 odd_balls: List[str] = []
 
-for x in file:
+for x in lst_experiments:
     if x not in dict_kgv:
         odd_balls.append(x)
 
@@ -40,8 +41,12 @@ x[1], reverse=True)
 
 jaro = JaroWinkler()
 
-for x, y in zip(dict_kgv, srt_dict):
-    if jaro.similarity(x, y) <= .5:
-        with open(similarity.csv) as file2:
-            write = csv.writer(file2)
-            write.writerows()
+fields = ['Known Good Values', 'Odd Balls', 'Similarity Value']
+
+with open('similarity.csv', 'w') as file:
+    csv_writer = csv.writer(file)
+    csv_writer.writerow(fields)
+    for x in dict_kgv:
+        for y in odd_balls:
+            similarity_value: float = jaro.similarity(x, y)
+            csv_writer.writerow([x, y, similarity_value])
