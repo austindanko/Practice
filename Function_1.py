@@ -34,19 +34,21 @@ for x in lst_experiments:
     if x not in dict_kgv:
         odd_balls.append(x)
 
-exp_dict: Dict[str, bool] = {x: odd_balls.count(x)
-                             for x in odd_balls}
-srt_dict = sorted(exp_dict.items(), key=lambda x:
-x[1], reverse=True)
+exp_dict: Dict[str, bool] = {x: odd_balls.count(x) for x in odd_balls}
+srt_dict = sorted(exp_dict.items(), key=lambda x: x[1], reverse=True)
 
 jaro = JaroWinkler()
 
-fields = ['Known Good Values', 'Odd Balls', 'Similarity Value']
+fields: List[str] = ['Known Good Values', 'Odd Balls', 'Similarity Value']
 
 with open('similarity.csv', 'w') as file:
     csv_writer = csv.writer(file)
     csv_writer.writerow(fields)
     for x in dict_kgv:
+        sim_val: List[str] = []
         for y in odd_balls:
             similarity_value: float = jaro.similarity(x, y)
+            sim_val.append((y, similarity_value))
             csv_writer.writerow([x, y, similarity_value])
+        sim_val.sort(reverse=True, key=lambda x: x[1])
+        print(sim_val[:3])
