@@ -39,7 +39,7 @@ srt_dict = sorted(exp_dict.items(), key=lambda x: x[1], reverse=True)
 
 jaro = JaroWinkler()
 
-fields: List[str] = ['Known Good Values', 'Odd Balls', 'Similarity Value']
+fields: List[str] = ['Top Three Matching Oddballs']
 
 with open('similarity.csv', 'w') as file:
     csv_writer = csv.writer(file)
@@ -49,6 +49,6 @@ with open('similarity.csv', 'w') as file:
         for y in odd_balls:
             similarity_value: float = jaro.similarity(x, y)
             sim_val.append((y, similarity_value))
-            csv_writer.writerow([x, y, similarity_value])
         sim_val.sort(reverse=True, key=lambda x: x[1])
-        print(sim_val[:3])
+        csv_writer.writerow(sim_val[:3])
+
