@@ -28,27 +28,32 @@ else:
         csv_reader = csv.reader(file)
         lst_experiments = next(csv_reader)
 
-odd_balls: List[str] = []
+Obscurity: List[str] = []
 
 for x in lst_experiments:
     if x not in dict_kgv:
-        odd_balls.append(x)
+        Obscurity.append(x)
 
-exp_dict: Dict[str, bool] = {x: odd_balls.count(x) for x in odd_balls}
+#####
+exp_dict: Dict[str, bool] = {x: Obscurity.count(x) for x in Obscurity}
 srt_dict = sorted(exp_dict.items(), key=lambda x: x[1], reverse=True)
+#####
 
 jaro = JaroWinkler()
 
-fields: List[str] = ['Top Three Matching Oddballs']
+fields: List[str] = ['Top Three Matching Obscurities']
 
 with open('similarity.csv', 'w') as file:
     csv_writer = csv.writer(file)
-    csv_writer.writerow(fields)
-    for x in dict_kgv:
+    #csv_writer.writerow(fields)
+    for x in known_good_values:
         sim_val: List[str] = []
-        for y in odd_balls:
+        for y in exp_dict:
             similarity_value: float = jaro.similarity(x, y)
-            sim_val.append((y, similarity_value))
-        sim_val.sort(reverse=True, key=lambda x: x[1])
-        csv_writer.writerow(sim_val[:3])
+            sim_val.append((((("Known Good Value", x, "Obscurity", y, "Similarity", similarity_value)))))
+        sim_val.sort(reverse=True, key=lambda x: x[5])
+    for x in sim_val:
+        csv_writer.writerow(x)
+
+
 
