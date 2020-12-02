@@ -1,10 +1,10 @@
+import heapq
 import os
 from typing import Set, Dict, Iterable, List
 import csv
 import requests
 import pynmrstar
 import time
-import strsimpy as strsimpy
 from strsimpy.jaro_winkler import JaroWinkler
 
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
@@ -41,17 +41,19 @@ srt_dict = sorted(exp_dict.items(), key=lambda x: x[1], reverse=True)
 
 jaro = JaroWinkler()
 
-fields: List[str] = ['Top Three Matching Obscurities']
+
 
 with open('similarity.csv', 'w') as file:
     csv_writer = csv.writer(file)
+    fields: List[str] = ['Top Three Matching Obscurities']
     #csv_writer.writerow(fields)
+    sim_val: List[str] = []
     for x in known_good_values:
-        sim_val: List[str] = []
         for y in exp_dict:
             similarity_value: float = jaro.similarity(x, y)
             sim_val.append((((("Known Good Value", x, "Obscurity", y, "Similarity", similarity_value)))))
-        sim_val.sort(reverse=True, key=lambda x: x[5])
+    #sim_val.sort(reverse=True, key=lambda x: x[5])
+
     for x in sim_val:
         csv_writer.writerow(x)
 
