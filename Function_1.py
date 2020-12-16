@@ -50,15 +50,12 @@ for algorithm in mapping:
         fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
         csv_writer.writerow(fields)
         for obscurity in obscurities:
-            sim_val: List[Tuple[str, str, float]] = []
+            sim_val: List[Tuple[str, float]] = []
             for good_value in known_good_values:
                 similarity_value: float = mapping[algorithm](obscurity, good_value)
-                sim_val.append((obscurity, good_value, similarity_value))
-            sim_val.sort(reverse=True, key=operator.itemgetter(0, 2))
-
+                sim_val.append((good_value, similarity_value))
+            sim_val.sort(reverse=True, key=operator.itemgetter(1))
             topthree: List[Union[str, float, int]] = []
             topthree.extend([x for y in sim_val[:3] for x in y])
-            topthree.insert(1, obscurity_count[obscurity])
-            topthree.pop(4)
-            topthree.pop(6)
-            csv_writer.writerow(topthree)
+            output = [obscurity, obscurity_count[obscurity]] + topthree
+            csv_writer.writerow(output)
