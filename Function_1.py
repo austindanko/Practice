@@ -1,11 +1,9 @@
-import collections
 import operator
 import os
 from typing import Set, Dict, Iterable, List, Tuple, Union, Generator, Any
 import csv
 import requests
 import pynmrstar
-import time
 from strsimpy.jaro_winkler import JaroWinkler
 from strsimpy.ngram import NGram
 from strsimpy import SIFT4
@@ -14,11 +12,10 @@ known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerati
 
 if not os.path.exists('api.bmrb.csv'):
     all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
-    experiments: Set[str] = set([])
+    experiments: List[str] = []
     for entry in all_entries:
         value = entry.get_tag('_Experiment.Name')
-        experiments.update(value)
-        time.sleep(.03)
+        experiments.extend(value)
 
     lst_experiments: List[str] = list(experiments)
 
