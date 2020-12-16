@@ -54,7 +54,14 @@ for algorithm in mapping:
             for good_value in known_good_values:
                 similarity_value: float = mapping[algorithm](obscurity, good_value)
                 sim_val.append((good_value, similarity_value))
-            sim_val.sort(reverse=True, key=operator.itemgetter(1))
+
+            # Jaro is a similarity, so we want large values. The others are distance
+            #  and we want small distances
+            if algorithm == 'jaro':
+                sim_val.sort(reverse=True, key=operator.itemgetter(1))
+            else:
+                sim_val.sort(reverse=False, key=operator.itemgetter(1))
+
             topthree: List[Union[str, float, int]] = []
             topthree.extend([x for y in sim_val[:3] for x in y])
             output = [obscurity, obscurity_count[obscurity]] + topthree
