@@ -30,7 +30,7 @@ else:
 obscurities: List[str] = []
 
 for obscurity in lst_experiments:
-    if obscurity not in known_good_values:
+    if obscurity not in known_good_values and obscurity not in pynmrstar.definitions.NULL_VALUES:
         obscurities.append(obscurity)
 
 #####
@@ -49,7 +49,7 @@ for algorithm in mapping:
         csv_writer = csv.writer(file)
         fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
         csv_writer.writerow(fields)
-        for obscurity in obscurities:
+        for obscurity in set(sorted(obscurities)):
             sim_val: List[Tuple[str, float]] = []
             for good_value in known_good_values:
                 similarity_value: float = mapping[algorithm](obscurity, good_value)
