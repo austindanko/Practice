@@ -50,7 +50,7 @@ for algorithm in mapping:
     print(f'Running {algorithm}...')
     with open(f'{algorithm}_sim.csv', 'w') as file:
         csv_writer = csv.writer(file)
-        fields: List[str] = ['Obscurity', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
+        fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
         csv_writer.writerow(fields)
         for obscurity in obscurities:
             sim_val: List[Tuple[str, str, float]] = []
@@ -62,4 +62,6 @@ for algorithm in mapping:
             topthree: List[Union[str, float, int]] = []
             topthree.extend([x for y in sim_val[:3] for x in y])
             topthree.insert(1, obscurity_count[obscurity])
+            topthree.pop(4)
+            topthree.pop(6)
             csv_writer.writerow(topthree)
