@@ -45,18 +45,18 @@ mapping = {'jaro': jaro, 'sift': sift, 'threegram': threegram}
 
 for algorithm in mapping:
     print(f'Running {algorithm}...')
-    with open(f'{algorithm}_sim.csv', 'w') as file:
-        csv_writer = csv.writer(file)
+    with open(f'{algorithm}_sim.csv', 'w') as file_a, open(f'{algorithm}_sim_orphan.csv', 'w') as file_b:
+        csv_writer_a = csv.writer(file_a)
+        csv_writer_b = csv.writer(file_b)
         fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
-        csv_writer.writerow(fields)
+        csv_writer_a.writerow(fields)
+        csv_writer_b.writerow(fields)
         for obscurity in set(sorted(obscurities)):
             sim_val: List[Tuple[str, float]] = []
             for good_value in known_good_values:
                 similarity_value: float = mapping[algorithm](obscurity, good_value)
                 sim_val.append((good_value, similarity_value))
 
-            # Jaro is a similarity, so we want large values. The others are distance
-            #  and we want small distances
             if algorithm == 'jaro':
                 sim_val.sort(reverse=True, key=operator.itemgetter(1))
             else:
@@ -65,4 +65,9 @@ for algorithm in mapping:
             topthree: List[Union[str, float, int]] = []
             topthree.extend([x for y in sim_val[:3] for x in y])
             output = [obscurity, obscurity_count[obscurity]] + topthree
-            csv_writer.writerow(output)
+
+            if obscurity_count[obscurity] <= 10:
+                csv_writer_b.writerow(output)
+            else:
+                csv_writer_a.writerow(output)
+
