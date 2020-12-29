@@ -48,7 +48,7 @@ for algorithm in mapping:
     with open(f'{algorithm}_sim.csv', 'w') as file_a, open(f'{algorithm}_sim_orphan.csv', 'w') as file_b:
         csv_writer_a = csv.writer(file_a)
         csv_writer_b = csv.writer(file_b)
-        fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KDV2', 'Similarity2', 'KDV3', 'Similarity3']
+        fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1', 'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
         csv_writer_a.writerow(fields)
         csv_writer_b.writerow(fields)
         for obscurity in set(sorted(obscurities)):
@@ -70,4 +70,6 @@ for algorithm in mapping:
                 csv_writer_b.writerow(output)
             else:
                 csv_writer_a.writerow(output)
+
+
 
