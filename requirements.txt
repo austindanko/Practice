@@ -1,3 +1,7 @@
 pynmrstar==3.0.8
 requests==2.24.0
 
+
+
+strsimpy~=0.1.9
+inquirer~=2.7.0
