@@ -22,11 +22,15 @@ with open (f'jaro_sim.csv', 'r') as file:
     values_only = [[values_only[value], values_only[value + 1], values_only[value + 2], values_only[value + 3]]
                    for value in range(0, len(values_only), 4)]
 #Conversion of list back into tuples
-    print(values_only)
-    print(rows)
+
     print("Welcome to BMRB's data organization")
     start = input("To begin data organization type start: ")
     if start == 'start':
+        row_num = input("Would you like to view the amount of faulty experiments? [Y/N]: ")
+        if row_num == 'Y':
+            print("Total no. of rows: %d" % (csv_reader.line_num))
+        else:
+            pass
         for value in values_only:
             print(f'The acceptable options for {value[0]} are:')
             for number, string in enumerate((value[1:] + alt_options), start=1):
@@ -47,12 +51,7 @@ with open (f'jaro_sim.csv', 'r') as file:
                 print(new_csv)
             elif choice == '5':
                 pass
-    #user input to choose 1-5
-    #if 1-3 are selected, add to new/updated csv file, print off next row to be analyzed
-    #if 4 selected, user input then add to the updated csv file, print off next row to be analyzed
-    #if skipped, send row to the end of the column, print off next row to be analyzed
-    #if end of csv/column reached, end
-    #if user input 'end', end
+
 
 
 
