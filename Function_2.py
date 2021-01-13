@@ -1,4 +1,5 @@
 import csv
+import pandas
 
 alt_options = ['rewrite', 'skip', 'end']
 rows = []
@@ -22,31 +23,37 @@ with open (f'jaro_sim.csv', 'r') as file:
                    for value in range(0, len(values_only), 400)]
 #Conversion of list back into tuples
 
-    print("Welcome to BMRB's data organization")
-    start = input("To begin data organization type start: ")
-    if start == 'start':
-        row_num = input("Would you like to view the amount of faulty experiments? [Y/N]: ")
-        if row_num.upper() == 'Y':
-            print("Total no. of rows: %d" % (csv_reader.line_num))
-        else:
-            pass
-        for value in values_only:
-            print(f'The acceptable options for {value[0]} are:')
-            for number, string in enumerate((value[1:] + alt_options), start=1):
-                print(f"{number, string}")
-            choice = input("Your chosen option is?: ")
-            if choice == '1':
-                user_input.append(value[1])
-            elif choice == '2':
-                user_input.append(value[2])
-            elif choice == '3':
-                user_input.append(value[3])
-            elif choice == '4':
-                rewrite = input("What would you like to name this experiment?: ")
-                user_input.append(rewrite)
-            elif choice == '5':
+    if len(user_input) == len(values_only):
+        pandas.DataFrame["User_Input"] = user_input
+        quit()
+    else:
+        print("Welcome to BMRB's data organization")
+        start = input("To begin data organization type start: ")
+        if start == 'start':
+            row_num = input("Would you like to view the amount of faulty experiments? [Y/N]: ")
+            if row_num.upper() == 'Y':
+                print("Total no. of rows: %d" % (csv_reader.line_num))
+            else:
                 pass
-            elif choice == '6':
-                quit()
+            for value in values_only:
+                print(f'The acceptable options for {value[0]} are:')
+                for number, string in enumerate((value[1:] + alt_options), start=1):
+                    print(f"{number, string}")
+                choice = input("Your chosen option is?: ")
+                if choice == '1':
+                    user_input.append(value[1])
+                elif choice == '2':
+                    user_input.append(value[2])
+                elif choice == '3':
+                    user_input.append(value[3])
+                elif choice == '4':
+                    rewrite = input("What would you like to name this experiment?: ")
+                    user_input.append(rewrite)
+                elif choice == '5':
+                    user_input.append('skipped')
+                elif choice == '6':
+                    quit()
+
+
 
 
