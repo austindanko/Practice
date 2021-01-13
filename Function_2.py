@@ -1,7 +1,7 @@
 import csv
 import pandas
 
-alt_options = ['rewrite', 'skip', 'end']
+alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
 rows = []
 values_only = []
 user_input = []
@@ -47,11 +47,13 @@ with open (f'jaro_sim.csv', 'r') as file:
                 elif choice == '3':
                     user_input.append(value[3])
                 elif choice == '4':
+                    user_input.append(value[0])
+                elif choice == '5':
                     rewrite = input("What would you like to name this experiment?: ")
                     user_input.append(rewrite)
-                elif choice == '5':
-                    user_input.append('skipped')
                 elif choice == '6':
+                    user_input.append('skipped')
+                elif choice == '7':
                     quit()
 
 
