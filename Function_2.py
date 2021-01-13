@@ -1,9 +1,17 @@
 import csv
+import pandas
+
 
 alt_options = ['rewrite', 'skip']
 rows = []
 values_only = []
 new_csv = []
+
+dataframe = pandas.read_csv("jaro_sim.csv")
+dataframe["new_column"] = ""
+dataframe.to_csv("jaro_sim.csv", index=False)
+#for each new column created, length of values_only line must also increase
+
 
 with open (f'jaro_sim.csv', 'r') as file:
     csv_reader = csv.reader(file)
@@ -12,7 +20,6 @@ with open (f'jaro_sim.csv', 'r') as file:
     for row in csv_reader:
         rows.append(row)
 #extracting each data row one by one
-    for row in rows:
         for value in row:
             try:
                 float(value)
@@ -20,7 +27,7 @@ with open (f'jaro_sim.csv', 'r') as file:
                 values_only.append(value)
 #Removal of numeric values from rows
     values_only = [[values_only[value], values_only[value + 1], values_only[value + 2], values_only[value + 3]]
-                   for value in range(0, len(values_only), 4)]
+                   for value in range(0, len(values_only), 5)]
 #Conversion of list back into tuples
 
     print("Welcome to BMRB's data organization")
