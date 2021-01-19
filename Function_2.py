@@ -6,16 +6,17 @@ from typing import List, Union
 #if len(row) > 8:
 #    return row
 
-def get_choice(row) -> List[Union[str, float]]:
+def get_choice(values_only):
 
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
 
-    print(f'The acceptable options for {value[0]} are:')
-    for number, string in enumerate((value[1:] + alt_options), start=1):
+    print(f'The acceptable options for {values_only[0]} are:')
+    for number, string in enumerate((values_only[1:] + alt_options), start=1):
         print(f"{number, string}")
     choice = input("Your chosen option is?: ")
     if choice == '1':
         #value one
+        pass
     elif choice == '2':
         #value two
         pass
@@ -44,14 +45,17 @@ def get_values(row) -> List[str]:
             float(value)
         except ValueError:
             values_only.append(value)
+    get_choice(values_only)
 
-    return values_only
 
-#with open(f'jaro_sim.csv', 'r') as file_a, open(f'temp_file.csv', 'w') as file_b:
-#csv_reader = csv.reader(file_a)
-#csv_writer = csv.writer(file_b)
-#skipping header/fields
-#fields = next(csv_reader)
+with open(f'jaro_sim.csv', 'r') as file_a, open(f'temp_file.csv', 'w') as file_b:
+    csv_reader = csv.reader(file_a)
+    csv_writer = csv.writer(file_b)
+    next(csv_reader, None)
+    for row in csv_reader:
+        get_values(row)
+
+
 
 # Rename a file
 #os.rename('original_name', 'new_name')
@@ -64,7 +68,6 @@ def get_values(row) -> List[str]:
 #         print("Total no. of rows: %d" % (csv_reader.line_num))
 #     else:
 #         pass
-#     for value in values_only:
 
 
 
