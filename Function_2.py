@@ -16,25 +16,19 @@ def get_choice(values_only):
     choice = input("Your chosen option is?: ")
     if choice == '1':
         #value one
-        pass
+        return (values_only[1])
     elif choice == '2':
-        #value two
-        pass
+        return (values_only[2])
     elif choice == '3':
-        #value 3
-        pass
+        return (values_only[3])
     elif choice == '4':
-        #new_KGV
-        pass
+        return (values_only[0])
     elif choice == '5':
-        #rewrite
         rewrite = input("What would you like to name this experiment?: ")
-        pass
+        return rewrite
     elif choice == '6':
-        #skip
         pass
     elif choice == '7':
-        #end
         quit()
 
 
