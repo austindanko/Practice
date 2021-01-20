@@ -15,7 +15,6 @@ def get_choice(values_only):
         print(f"{number, string}")
     choice = input("Your chosen option is?: ")
     if choice == '1':
-        #value one
         return (values_only[1])
     elif choice == '2':
         return (values_only[2])
@@ -39,7 +38,9 @@ def get_values(row) -> List[str]:
             float(value)
         except ValueError:
             values_only.append(value)
-    get_choice(values_only)
+    row.append(get_choice(values_only))
+    csv_writer.writerow(row)
+
 
 
 with open(f'jaro_sim.csv', 'r') as file_a, open(f'temp_file.csv', 'w') as file_b:
@@ -48,8 +49,6 @@ with open(f'jaro_sim.csv', 'r') as file_a, open(f'temp_file.csv', 'w') as file_b
     next(csv_reader, None)
     for row in csv_reader:
         get_values(row)
-
-
 
 # Rename a file
 #os.rename('original_name', 'new_name')
