@@ -48,7 +48,13 @@ with open(f'jaro_sim.csv', 'r') as file_a, open(f'temp_file.csv', 'w') as file_b
     csv_writer = csv.writer(file_b)
     next(csv_reader, None)
     for row in csv_reader:
-        get_values(row)
+        if len(row) >= 9:
+            csv_writer.writerow(row)
+        elif row == []:
+            print("CONGRATULATIONS")
+            quit()
+        elif len(row) == 8:
+            get_values(row)
 
 # Rename a file
 #os.rename('original_name', 'new_name')
