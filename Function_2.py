@@ -1,37 +1,43 @@
 import csv
 from typing import List, Union
 
+# To do:
+# 1) If the user quits early, write the rest of the rows
+# 2) After 1), you can replace the original file with the temp file
+# 3) Extra credit - handle the program terminating due to a control-c
 
-# First, look at row, and determine if it already has a choice
-# where to place...
-# if len(row) > 8:
-#    return row
 
 def get_choice(values_only: [str]) -> Union[str, None]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
+    count = 0
 
-    print(f'The acceptable options for {values_only[0]} are:')
-    for number, string in enumerate((values_only[1:] + alt_options), start=1):
-        print(f"{number, string}")
-    choice = input("Your chosen option is?: ")
-    if choice == '1':
-        return values_only[1]
-    elif choice == '2':
-        return values_only[2]
-    elif choice == '3':
-        return values_only[3]
-    elif choice == '4':
-        return values_only[0]
-    elif choice == '5':
-        rewrite = input("What would you like to name this experiment?: ")
-        return rewrite
-    elif choice == '6':
-        return None
-    elif choice == '7':
-        quit()
-    else:
-        # TODO: Force them to choose again
-        pass
+    while (count < 3):
+        count = count+1
+        print(f'The acceptable options for {values_only[0]} are:')
+        for number, string in enumerate((values_only[1:] + alt_options), start=1):
+            print(f"{number, string}")
+        choice = input("Your chosen option is?: ")
+        if choice == '1':
+            return values_only[1]
+        elif choice == '2':
+            return values_only[2]
+        elif choice == '3':
+            return values_only[3]
+        elif choice == '4':
+            return values_only[0]
+        elif choice == '5':
+            rewrite = input("What would you like to name this experiment?: ")
+            return rewrite
+        elif choice == '6':
+            return None
+        elif choice == '7':
+            quit()
+        elif count == 3:
+            #writerow, the rest of the rows
+            raise ValueError('Unacceptable choice')
+        else:
+            print('Chose option between 1-7')
+            pass
 
 
 def get_values(line) -> None:
@@ -54,7 +60,6 @@ with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
         if len(row) >= 9:
             csv_writer.writerow(row)
         elif not row:
-            print("CONGRATULATIONS")
             quit()
         elif len(row) == 8:
             get_values(row)
