@@ -1,17 +1,11 @@
 import csv
 from typing import List, Union
 
-# To do:
-# 1) If the user quits early, write the rest of the rows
-# 2) After 1), you can replace the original file with the temp file
-# 3) Extra credit - handle the program terminating due to a control-c
-
-
 def get_choice(values_only: [str]) -> Union[str, None]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
     count = 0
 
-    while (count < 3):
+    while count < 3:
         count = count+1
         print(f'The acceptable options for {values_only[0]} are:')
         for number, string in enumerate((values_only[1:] + alt_options), start=1):
@@ -31,40 +25,47 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '6':
             return None
         elif choice == '7':
-            quit()
+            raise KeyboardInterrupt("User doesn't want to continue.")
         elif count == 3:
-            #writerow, the rest of the rows
-            raise ValueError('Unacceptable choice')
+            raise ValueError('UNACCEPTABLE OPTION')
         else:
             print('Chose option between 1-7')
-            pass
 
 
-def get_values(line) -> None:
+def get_values(original_row: [Union[str, float]]) -> None:
     values_only = []
-    for value in line:
+    for value in original_row:
         try:
             float(value)
         except ValueError:
             values_only.append(value)
 
-    line.append(get_choice(values_only))
-    csv_writer.writerow(line)
+    user_choice = get_choice(values_only)
+    original_row.append(user_choice)
 
 
 with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
     csv_reader = csv.reader(file_a)
     csv_writer = csv.writer(file_b)
     next(csv_reader)
-    for row in csv_reader:
-        if len(row) >= 9:
+    try:
+        for row in csv_reader:
+            if len(row) >= 9:
+                csv_writer.writerow(row)
+            elif len(row) == 8:
+                get_values(row)
+                csv_writer.writerow(row)
+            else:
+                raise ValueError(f"Input file has row with wrong number of elements: {row}")
+    except (KeyboardInterrupt, ValueError):
+        for row in csv_reader:
             csv_writer.writerow(row)
-        elif not row:
-            quit()
-        elif len(row) == 8:
-            get_values(row)
-        else:
-            raise ValueError(f"Input file has row with wrong number of elements: {row}")
+    finally:
+        pass
+        # TODO: Move new file into place of old one
+
+
+
 
 # Rename a file
 # os.rename('original_name', 'new_name')
