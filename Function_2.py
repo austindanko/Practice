@@ -20,6 +20,8 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '3':
             return values_only[3]
         elif choice == '4':
+            # new csv file for new known good values
+            # write in append mode, append choice to new csv
             return values_only[0]
         elif choice == '5':
             rewrite = input("What would you like to name this experiment?: ")
@@ -27,7 +29,7 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '6':
             return None
         elif choice == '7':
-            raise KeyboardInterrupt
+            raise SystemExit('User Quit')
         elif count == 3:
             raise ValueError('UNACCEPTABLE OPTION')
         else:
@@ -49,7 +51,7 @@ def get_values(original_row: [Union[str, float]]) -> None:
 with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
     csv_reader = csv.reader(file_a)
     csv_writer = csv.writer(file_b)
-    next(csv_reader)
+    csv_writer.writerow(next(csv_reader))
     try:
         for row in csv_reader:
             if len(row) >= 9:
@@ -59,12 +61,12 @@ with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
                 csv_writer.writerow(row)
             else:
                 raise ValueError(f"Input file has row with wrong number of elements: {row}")
-    except (KeyboardInterrupt, ValueError):
+    except (KeyboardInterrupt, ValueError, SystemExit):
         csv_writer.writerow(row)
         for row in csv_reader:
             csv_writer.writerow(row)
     finally:
-        #os.rename(,)
+        os.rename('temp_file.csv', 'jaro_sim.csv')
 
 # Rename a file
 # os.rename('original_name', 'new_name')
