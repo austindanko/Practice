@@ -1,12 +1,14 @@
 import csv
+import os
 from typing import List, Union
+
 
 def get_choice(values_only: [str]) -> Union[str, None]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
     count = 0
 
     while count < 3:
-        count = count+1
+        count = count + 1
         print(f'The acceptable options for {values_only[0]} are:')
         for number, string in enumerate((values_only[1:] + alt_options), start=1):
             print(f"{number, string}")
@@ -25,7 +27,7 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '6':
             return None
         elif choice == '7':
-            raise KeyboardInterrupt("User doesn't want to continue.")
+            raise KeyboardInterrupt
         elif count == 3:
             raise ValueError('UNACCEPTABLE OPTION')
         else:
@@ -58,14 +60,11 @@ with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
             else:
                 raise ValueError(f"Input file has row with wrong number of elements: {row}")
     except (KeyboardInterrupt, ValueError):
+        csv_writer.writerow(row)
         for row in csv_reader:
             csv_writer.writerow(row)
     finally:
-        pass
-        # TODO: Move new file into place of old one
-
-
-
+        #os.rename(,)
 
 # Rename a file
 # os.rename('original_name', 'new_name')
