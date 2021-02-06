@@ -20,8 +20,10 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '3':
             return values_only[3]
         elif choice == '4':
-            # new csv file for new known good values
-            # write in append mode, append choice to new csv
+            with open('new_kdg', 'a') as file:
+                csv_reader = csv.reader(file)
+                csv_writer = csv.writer(file)
+                csv_writer.writerow([values_only[0]])
             return values_only[0]
         elif choice == '5':
             rewrite = input("What would you like to name this experiment?: ")
