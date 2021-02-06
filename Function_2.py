@@ -21,7 +21,6 @@ def get_choice(values_only: [str]) -> Union[str, None]:
             return values_only[3]
         elif choice == '4':
             with open('new_kdg', 'a') as file:
-                csv_reader = csv.reader(file)
                 csv_writer = csv.writer(file)
                 csv_writer.writerow([values_only[0]])
             return values_only[0]

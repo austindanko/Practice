@@ -10,6 +10,11 @@ from strsimpy import SIFT4
 
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
 
+with open('new_kdg.csv', 'r') as file:
+    csv_reader = csv.reader(file)
+    for row in csv_reader:
+        known_good_values.update(row)
+
 if not os.path.exists('api.bmrb.csv'):
     all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
     experiments: List[str] = []
