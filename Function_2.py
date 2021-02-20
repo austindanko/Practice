@@ -3,7 +3,7 @@ import os
 from typing import List, Union
 
 
-def get_choice(values_only: [str]) -> Union[str, None]:
+def get_choice(values_only: [str]) -> [str]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
     count = 0
 
@@ -20,7 +20,7 @@ def get_choice(values_only: [str]) -> Union[str, None]:
         elif choice == '3':
             return values_only[3]
         elif choice == '4':
-            with open('new_kdg', 'a') as file:
+            with open('new_kdg.csv', 'a') as file:
                 csv_writer = csv.writer(file)
                 csv_writer.writerow([values_only[0]])
             return values_only[0]
@@ -31,10 +31,10 @@ def get_choice(values_only: [str]) -> Union[str, None]:
             return None
         elif choice == '7':
             raise SystemExit('User Quit')
-        elif count == 3:
-            raise ValueError('UNACCEPTABLE OPTION')
         else:
             print('Chose option between 1-7')
+
+    raise ValueError('UNACCEPTABLE OPTION')
 
 
 def get_values(original_row: [Union[str, float]]) -> None:
@@ -69,14 +69,4 @@ with open('jaro_sim.csv', 'r') as file_a, open('temp_file.csv', 'w') as file_b:
     finally:
         os.rename('temp_file.csv', 'jaro_sim.csv')
 
-# Rename a file
-# os.rename('original_name', 'new_name')
 
-# print("Welcome to BMRB's data organization")
-# start = input("To begin data organization type start: ")
-# if start == 'start':
-#     row_num = input("Would you like to view the amount of faulty experiments? [Y/N]: ")
-#     if row_num.upper() == 'Y':
-#         print("Total no. of rows: %d" % (csv_reader.line_num))
-#     else:
-#         pass
