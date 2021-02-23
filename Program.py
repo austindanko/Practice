@@ -21,10 +21,8 @@ def experiment_sim(obscurities: List[str]) -> None:
     jaro = JaroWinkler().similarity
     obscurity_count: Dict[str, bool] = {x: obscurities.count(x) for x in obscurities}
     print('Running jaro...')
-    with open('jaro_sim.csv', 'r') as file_a, open('jaro_sim.csv', 'w') as file_b:
-        csv_reader = csv.reader(file_a)
-        csv_writer = csv.writer(file_b)
-        csv_writer.writerow(next(csv_reader))
+    with open('jaro_sim.csv', 'a') as file_jaro_sim:
+        jaro_sim_writer = csv.writer(file_jaro_sim)
         for obscurity in set(sorted(obscurities)):
             sim_val: List[Tuple[str, float]] = []
             for good_value in known_good_values:
@@ -35,13 +33,11 @@ def experiment_sim(obscurities: List[str]) -> None:
                 topthree.extend([x for y in sim_val[:3] for x in y])
                 output = [obscurity, obscurity_count[obscurity]] + topthree
                 if obscurity_count[obscurity] <= 10:
-                    with open('jaro_sim_orphan.csv', 'r') as file_c, open('jaro_sim_orphan.csv', 'w') as file_d:
-                        csv_reader = csv.reader(file_c)
-                        csv_writer = csv.writer(file_d)
-                        csv_writer.writerow(next(csv_reader))
-                        csv_writer.writerow(output)
+                    with open('jaro_sim_orphan.csv', 'a') as file_jaro_sim_orphan:
+                        jaro_sim_orphan_writer = csv.writer(file_jaro_sim_orphan)
+                        jaro_sim_orphan_writer.writerow(output)
                 else:
-                    csv_writer.writerow(output)
+                    jaro_sim_writer.writerow(output)
 
 
 def existence() -> List[str]:
@@ -59,18 +55,19 @@ def existence() -> List[str]:
                 for entry in all_entries:
                     value = entry.get_tag('_Experiment.Name')
                     experiments.extend(value)
-                with open('api.bmrb.csv', 'w') as file:
-                    csv_writer = csv.writer(file)
-                    csv_writer.writerow(experiments)
+                with open('api.bmrb.csv', 'w') as file_api_bmrb:
+                    api_bmrb_writer = csv.writer(file_api_bmrb)
+                    api_bmrb.writerow(experiments)
         elif path == 'jaro':
             if os.path.exists('jaro_sim.csv'):
                 pass
                 # paste function2 line 52 ->
             else:
                 print('Running jaro...')
-                with open('jaro_sim.csv', 'w') as file_a, open('jaro_sim_orphan.csv', 'w') as file_b:
-                    csv_writer_a = csv.writer(file_a)
-                    csv_writer_b = csv.writer(file_b)
+                with open('jaro_sim.csv', 'w') as file_jaro_sim, \
+                        open('jaro_sim_orphan.csv', 'w') as file_jaro_sim_orphan:
+                    csv_writer_a = csv.writer(file_jaro_sim)
+                    csv_writer_b = csv.writer(file_jaro_sim_orphan)
                     fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1',
                                          'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
                     csv_writer_a.writerow(fields)
