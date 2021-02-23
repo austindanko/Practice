@@ -3,7 +3,7 @@ import os
 from typing import List, Union
 
 
-def get_choice(values_only: [str]) -> [str]:
+def get_choice(values_only: List[str]) -> [str]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
     count = 0
 
