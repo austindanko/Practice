@@ -6,17 +6,19 @@ import requests
 import pynmrstar
 from strsimpy.jaro_winkler import JaroWinkler
 
-experiments: List[str] = []
-lst_experiments: List[str] = list(experiments)
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
 
 
-def get_obscur():
+
+def obscure(lst_experiments: List[str]):
     obscurities: List[str] = []
-    obscurity_count: Dict[str, bool] = {x: obscurities.count(x) for x in obscurities}
     for obscurity in lst_experiments:
         if obscurity not in known_good_values and obscurity not in pynmrstar.definitions.NULL_VALUES:
             obscurities.append(obscurity)
+
+
+def experiment_sort(obscurities: List[str]):
+    obscurity_count: Dict[str, bool] = {x: obscurities.count(x) for x in obscurities}
     for obscurity in set(sorted(obscurities)):
         sim_val: List[Tuple[str, float]] = []
         for good_value in known_good_values:
@@ -26,43 +28,50 @@ def get_obscur():
         topthree: List[Union[str, float, int]] = []
         topthree.extend([x for y in sim_val[:3] for x in y])
         output = [obscurity, obscurity_count[obscurity]] + topthree
-
-        if obscurity_count[obscurity] <= 10:
-            csv_writer_b.writerow(output)
-        else:
-            csv_writer_a.writerow(output)
+        with open('jaro_sim.csv', 'w') as file_a, open('jaro_sim_orphan.csv', 'w') as file_b:
+            csv_writer_a = csv.writer(file_a)
+            csv_writer_b = csv.writer(file_b)
+            if obscurity_count[obscurity] <= 10:
+                csv_writer_b.writerow(output)
+            else:
+                csv_writer_a.writerow(output)
 
 
 def existence():
-    all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
-    jaro = JaroWinkler().similarity
-    mapping: Dict[str, Any] = {'api.bmrb': all_entries, 'jaro_sim': jaro}
+    pathway: List[str] = ['api', 'jaro']
+    for path in pathway:
+        if path == 'api':
+            if os.path.exists('api.bmrb.csv'):
+                with open('api.bmrb.csv', 'r') as file:
+                    csv_reader = csv.reader(file)
+                    lst_experiments = next(csv_reader)
+                    #return lst_experiments
+            else:
+                all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
+                print('Running api.bmrb...')
+                experiments: List[str] = []
+                for entry in all_entries:
+                    value = entry.get_tag('_Experiment.Name')
+                    experiments.extend(value)
+                lst_experiments: List[str] = list(experiments)
+                with open('api.bmrb.csv', 'w') as file:
+                    csv_writer = csv.writer(file)
+                    csv_writer.writerow(lst_experiments)
+                    #return lst_experiments
+        elif path == 'jaro':
+            if os.path.exists('jaro_sim.csv'):
+                return None
+            else:
+                jaro = JaroWinkler().similarity
+                print('Running jaro...')
+                with open('jaro_sim.csv', 'w') as file_a, open('jaro_sim_orphan.csv', 'w') as file_b:
+                    csv_writer_a = csv.writer(file_a)
+                    csv_writer_b = csv.writer(file_b)
+                    fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1',
+                                         'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
+                    csv_writer_a.writerow(fields)
+                    csv_writer_b.writerow(fields)
+                    return None
 
-    for algorithm in mapping:
-        print(f'Running {algorithm}...')
-        if os.path.exists(f'{algorithm}.csv') and f'{algorithm}' == 'api.bmrb':
-            with open('api.bmrb.csv', 'r') as file:
-                csv_reader = csv.reader(file)
-                lst_experiments = next(csv_reader)
-        elif not os.path.exists (f'{algorithm}.csv') and f'{algorithm}' == 'api.bmrb':
-            for entry in all_entries:
-                value = entry.get_tag('_Experiment.Name')
-                experiments.extend(value)
-            with open('api.bmrb.csv', 'w') as file:
-                csv_writer = csv.writer(file)
-                csv_writer.writerow(lst_experiments)
-        elif os.path.exists(f'{algorithm}.csv') and f'{algorithm}' == 'jaro.sim':
-            pass
-        elif not os.path.exists (f'{algorithm}.csv') and f'{algorithm}' == 'jaro.sim':
-            with open('jaro_sim.csv', 'w') as file_a, open('jaro_sim_orphan.csv', 'w') as file_b:
-                csv_writer_a = csv.writer(file_a)
-                csv_writer_b = csv.writer(file_b)
-                fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1',
-                                     'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
-                csv_writer_a.writerow(fields)
-                csv_writer_b.writerow(fields)
-                get_obscur()
 
 existence()
-
-

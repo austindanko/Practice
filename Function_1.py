@@ -24,6 +24,7 @@ if not os.path.exists('api.bmrb.csv'):
 
     lst_experiments: List[str] = list(experiments)
 
+
     with open('api.bmrb.csv', 'w') as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow(lst_experiments)
@@ -33,6 +34,7 @@ else:
         lst_experiments = next(csv_reader)
 
 obscurities: List[str] = []
+
 
 for obscurity in lst_experiments:
     if obscurity not in known_good_values and obscurity not in pynmrstar.definitions.NULL_VALUES:
