@@ -9,12 +9,9 @@ from strsimpy.jaro_winkler import JaroWinkler
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
 
 
-
-
-
-def obscure(lst_experiments: List[str]) -> List[str]:
+def obscure(experiments: List[str]) -> List[str]:
     obscurities: List[str] = []
-    for obscurity in lst_experiments:
+    for obscurity in experiments:
         if obscurity not in known_good_values and obscurity not in pynmrstar.definitions.NULL_VALUES:
             obscurities.append(obscurity)
     return obscurities
@@ -47,16 +44,15 @@ def experiment_sim(obscurities: List[str]) -> None:
                     csv_writer.writerow(output)
 
 
-def existence():
+def existence() -> List[str]:
     pathway: List[str] = ['api', 'jaro']
     experiments: List[str] = []
-    lst_experiments: List[str] = list(experiments)
     for path in pathway:
         if path == 'api':
             if os.path.exists('api.bmrb.csv'):
                 with open('api.bmrb.csv', 'r') as file:
                     csv_reader = csv.reader(file)
-                    lst_experiments = next(csv_reader)
+                    experiments = next(csv_reader)
             else:
                 all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
                 print('Running api.bmrb...')
@@ -65,11 +61,11 @@ def existence():
                     experiments.extend(value)
                 with open('api.bmrb.csv', 'w') as file:
                     csv_writer = csv.writer(file)
-                    csv_writer.writerow(lst_experiments)
+                    csv_writer.writerow(experiments)
         elif path == 'jaro':
             if os.path.exists('jaro_sim.csv'):
                 pass
-                #paste function2 line 52 ->
+                # paste function2 line 52 ->
             else:
                 print('Running jaro...')
                 with open('jaro_sim.csv', 'w') as file_a, open('jaro_sim_orphan.csv', 'w') as file_b:
@@ -79,8 +75,7 @@ def existence():
                                          'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
                     csv_writer_a.writerow(fields)
                     csv_writer_b.writerow(fields)
-    return lst_experiments
+    return experiments
 
 
 experiment_sim(obscure(existence()))
-
