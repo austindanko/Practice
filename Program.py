@@ -26,10 +26,18 @@ def get_choice(values_only: List[str]) -> [str]:
         elif choice == '3':
             return values_only[3]
         elif choice == '4':
-            with open('new_kgv.csv', 'a') as file_new_kgv:
-                csv_writer = csv.writer(file_new_kgv)
-                csv_writer.writerow([values_only[0]])
-            return values_only[0]
+            confirm = input('Would you like to use this as a new known good value "y" or "n" ')
+            if confirm.lower() == 'y':
+                with open('new_kgv.csv', 'a') as file_new_kgv:
+                    csv_writer = csv.writer(file_new_kgv)
+                    csv_writer.writerow([values_only[0]])
+                return values_only[0]
+            else:
+                rewrite = input("What would you like to name this experiment?: ")
+                with open('new_kgv.csv', 'a') as file_new_kgv:
+                    csv_writer = csv.writer(file_new_kgv)
+                    csv_writer.writerow([rewrite])
+                return rewrite
         elif choice == '5':
             rewrite = input("What would you like to name this experiment?: ")
             return rewrite
