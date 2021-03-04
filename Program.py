@@ -46,18 +46,18 @@ def existence() -> List[str]:
     for path in pathway:
         if path == 'api':
             if os.path.exists('api.bmrb.csv'):
-                with open('api.bmrb.csv', 'r') as file:
-                    csv_reader = csv.reader(file)
-                    experiments = next(csv_reader)
+                with open('api.bmrb.csv', 'r') as file_api:
+                    api_csv_reader = csv.reader(file_api)
+                    experiments: List[str] = next(api_csv_reader)
             else:
                 all_entries: Iterable[pynmrstar.Entry] = pynmrstar.utils.iter_entries()
                 print('Running api.bmrb...')
                 for entry in all_entries:
                     value = entry.get_tag('_Experiment.Name')
                     experiments.extend(value)
-                with open('api.bmrb.csv', 'w') as file_api_bmrb:
-                    api_bmrb_writer = csv.writer(file_api_bmrb)
-                    api_bmrb.writerow(experiments)
+                with open('api.bmrb.csv', 'w') as file_api:
+                    api_csv_writer = csv.writer(file_api)
+                    api_csv_writer.writerow(experiments)
         elif path == 'jaro':
             if os.path.exists('jaro_sim.csv'):
                 pass
@@ -66,12 +66,12 @@ def existence() -> List[str]:
                 print('Running jaro...')
                 with open('jaro_sim.csv', 'w') as file_jaro_sim, \
                         open('jaro_sim_orphan.csv', 'w') as file_jaro_sim_orphan:
-                    csv_writer_a = csv.writer(file_jaro_sim)
-                    csv_writer_b = csv.writer(file_jaro_sim_orphan)
+                    jaro_csv_writer = csv.writer(file_jaro_sim)
+                    orphan_csv_writer = csv.writer(file_jaro_sim_orphan)
                     fields: List[str] = ['Obscurity', 'Count', 'KGV1', 'Similarity1',
                                          'KGV2', 'Similarity2', 'KGV3', 'Similarity3']
-                    csv_writer_a.writerow(fields)
-                    csv_writer_b.writerow(fields)
+                    jaro_csv_writer.writerow(fields)
+                    orphan_csv_writer.writerow(fields)
     return experiments
 
 
