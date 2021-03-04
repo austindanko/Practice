@@ -137,8 +137,11 @@ def user_input():
             for row in jaro_csv_reader:
                 temp_csv_writer.writerow(row)
         finally:
-            #os.rename('temp_file.csv', 'jaro_sim.csv')
-            return None
+            os.rename('temp_file.csv', 'jaro_sim.csv')
 
 
-experiment_sim(obscure(existence()))
+# existence()
+# experiment_sim(obscure(existence()))
+
+
+user_input()
