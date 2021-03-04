@@ -10,7 +10,7 @@ from strsimpy import SIFT4
 
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
 
-with open('new_kdg.csv', 'r') as file:
+with open('new_kgv.csv', 'r') as file:
     csv_reader = csv.reader(file)
     for row in csv_reader:
         known_good_values.update(row)
@@ -24,7 +24,6 @@ if not os.path.exists('api.bmrb.csv'):
 
     lst_experiments: List[str] = list(experiments)
 
-
     with open('api.bmrb.csv', 'w') as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow(lst_experiments)
@@ -34,7 +33,6 @@ else:
         lst_experiments = next(csv_reader)
 
 obscurities: List[str] = []
-
 
 for obscurity in lst_experiments:
     if obscurity not in known_good_values and obscurity not in pynmrstar.definitions.NULL_VALUES:
@@ -77,6 +75,3 @@ for algorithm in mapping:
                 csv_writer_b.writerow(output)
             else:
                 csv_writer_a.writerow(output)
-
-
-
