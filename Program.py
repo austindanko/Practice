@@ -9,6 +9,13 @@ from strsimpy.jaro_winkler import JaroWinkler
 known_good_values: Set[str] = set(requests.get('https://api.bmrb.io/v2/enumerations/_Experiment.Name').json()['values'])
 
 
+def kgv_transfer():
+    with open('new_kgv.csv', 'r') as file_new_kgv:
+        csv_reader = csv.reader(file_new_kgv)
+        for row in csv_reader:
+            known_good_values.update(row)
+
+
 def get_choice(values_only: List[str]) -> [str]:
     alt_options = ['new_KGV', 'rewrite', 'skip', 'end']
     count = 0
@@ -31,12 +38,14 @@ def get_choice(values_only: List[str]) -> [str]:
                 with open('new_kgv.csv', 'a') as file_new_kgv:
                     csv_writer = csv.writer(file_new_kgv)
                     csv_writer.writerow([values_only[0]])
+                kgv_transfer()
                 return values_only[0]
             else:
                 rewrite = input("What would you like to name this experiment?: ")
                 with open('new_kgv.csv', 'a') as file_new_kgv:
                     csv_writer = csv.writer(file_new_kgv)
                     csv_writer.writerow([rewrite])
+                kgv_transfer()
                 return rewrite
         elif choice == '5':
             rewrite = input("What would you like to name this experiment?: ")
@@ -148,8 +157,8 @@ def user_input():
             os.rename('temp_file.csv', 'jaro_sim.csv')
 
 
-# existence()
-# experiment_sim(obscure(existence()))
+existence()
+experiment_sim(obscure(existence()))
 
 
 user_input()
